@@ -9,6 +9,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -55,8 +56,20 @@ namespace WebAPI
             //*AddDependencyResolvers ile çaðrýldýðý için kapatýldý
 
             //Cors Injection
-            services.AddCors();//*
+            //services.AddCors();//*
 
+            //Yine CORS bloklamasýyla karþý karþýya kaldým. Araþtýrmam sonucu aþaðýdaki yönergeleri buldum.
+            //Bir yönerge ekleyip localhost üzerinden gelecek yönergelere tüm izinleri ayarlýyor.
+            //Configure üzerinden çalýþtýrýlýyor
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                  "CorsPolicy",
+                  builder => builder.WithOrigins("http://localhost:4200")
+                  .AllowAnyMethod()
+                  .AllowAnyHeader()
+                  .AllowCredentials());
+            });
 
             // Configuration ile appsettings.json dosyasýnda "TokenOptions" bölümü "TokenOptions" tipinde okunur
             var tokenOptions = Configuration.GetSection(key: "TokenOptions").Get<TokenOptions>();
@@ -102,7 +115,12 @@ namespace WebAPI
             //Access to XMLHttpRequest at 'https://localhost:44308/api/products/getall' from origin 'http://localhost:4021' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
             //Get Failed hatasý alýyordum. AlloAnyHeader'i, Origin'a çevirdim.
             //
-            app.UseCors(builder=>builder.WithOrigins("http://localhost:4021/").AllowAnyOrigin());
+
+            //app.UseCors(builder=>builder.WithOrigins("http://localhost:4021/").AllowAnyHeader());
+
+
+            app.UseCors("CorsPolicy");//burada kullanacaðýmýz yönergeyi seçip ekledi.
+
 
             app.UseHttpsRedirection();
 

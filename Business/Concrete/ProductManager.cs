@@ -37,9 +37,9 @@ namespace Business.Concrete
 
         //özel attributelar ile metotlara müdahale ederiz
 
-        [SecuredOperation("product.add,admin")]//"","" // yetkiler
+        //[SecuredOperation("product.add,admin")]//"","" // yetkiler
         [ValidationAspect(typeof(ProductValidator))] //parametreyi doğrulaması için validator verilir
-        [CacheRemoveAspect("IProductService.Get")]
+        [CacheRemoveAspect("IProductService.Get")]//
         public IResult Add(Product product)
         {
 
@@ -93,10 +93,10 @@ namespace Business.Concrete
                 );
         }
 
-        public IDataResult<List<Product>> GetAllByCategoryId(int categId)
+        public IDataResult<List<Product>> GetAllByCategoryId(int categoryId)
         {
             return new SuccessDataResult<List<Product>>
-                (_productDal.GetAll(p => p.CategoryId == categId));
+                (_productDal.GetAll(p => p.CategoryId == categoryId));
         }
 
         [CacheAspect]

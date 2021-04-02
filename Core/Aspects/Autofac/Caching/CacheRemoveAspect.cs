@@ -19,7 +19,7 @@ namespace Core.Aspects.Autofac.Caching
             _pattern = pattern;
             _cacheManager = ServiceTool.ServiceProvider.GetService<ICacheManager>();
         }
-
+        //verilen cache tool'a göre istenilen key durumunda silme işlemini gerçekleştirir,
         protected override void OnSuccess(IInvocation invocation)
         {
             _cacheManager.RemoveByPattern(_pattern);

@@ -37,7 +37,7 @@ namespace WebAPI.Controllers
         [HttpGet("getall")] // isim vererek /getall şeklinde kontrol etmesini sağlayabilirsin.
         public IActionResult GetAll()
         {
-            Thread.Sleep(3000);
+            Thread.Sleep(200);
 
             IProductService ps = new ProductManager(
                 new EfProductDal(), new CategoryManager(new EfCategoryDal()));
@@ -49,11 +49,35 @@ namespace WebAPI.Controllers
                 return BadRequest(result);
 
         }
-
+        
         [HttpGet("getbyid")]
         public IActionResult GetById(int id)
         {
             var result = _productService.GetById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpGet("getbycategory")]
+        public IActionResult GetByCategoryId(int categoryId)
+        {
+            var result = _productService.GetAllByCategoryId(categoryId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpGet("getproductdetails")]
+        public IActionResult GetProductDetails(int productId)
+        {
+            var result = _productService.GetProductDetails();
             if (result.Success)
             {
                 return Ok(result);
